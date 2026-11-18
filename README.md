@@ -61,7 +61,7 @@ pip install streamlit pandas plotly
 Open the dashboard:
 
 ```bash
-streamlit run app.py
+streamlit run src/app.py
 ```
 
 With the default inputs, baseline annual cost is 3,000,000 RON, first-year scenario cost is 2,850,000 RON, and first-year savings are 150,000 RON (with 250,000 RON/year in savings from Year 2 onward). Over 10 years, cumulative baseline cost is 30,000,000 RON, cumulative scenario cost is 27,600,000 RON, and total cumulative savings reach 2,400,000 RON.
