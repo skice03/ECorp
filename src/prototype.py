@@ -26,6 +26,50 @@ def compare_costs(
     return baseline_cost, scenario_cost, savings
 
 
+def project_costs(
+    employees,
+    replaced,
+    annual_employee_cost,
+    annual_ai_cost,
+    implementation_cost,
+    years=10,
+):
+    if years < 1 or years > 10:
+        raise ValueError("Years must be between 1 and 10")
+
+    projection = []
+    cumul_baseline = 0.0
+    cumul_scenario = 0.0
+    cumul_savings = 0.0
+
+    for year in range(1, years + 1):
+        yearly_setup = implementation_cost if year == 1 else 0.0
+        baseline_cost, scenario_cost, savings = compare_costs(
+            employees,
+            replaced,
+            annual_employee_cost,
+            annual_ai_cost,
+            yearly_setup,
+        )
+        cumul_baseline += baseline_cost
+        cumul_scenario += scenario_cost
+        cumul_savings += savings
+
+        projection.append(
+            {
+                "year": year,
+                "baseline_cost": baseline_cost,
+                "scenario_cost": scenario_cost,
+                "savings": savings,
+                "cumul_baseline": cumul_baseline,
+                "cumul_scenario": cumul_scenario,
+                "cumul_savings": cumul_savings,
+            }
+        )
+
+    return projection
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Compare first-year workforce costs before and after AI replacement."
@@ -51,6 +95,10 @@ def main():
         "--implementation-cost", type=float, default=100000,
         help="One-time AI setup cost in RON (default: 100000)"
     )
+    parser.add_argument(
+        "--years", type=int, default=10,
+        help="Number of years to project, 1-10 (default: 10)"
+    )
 
     args = parser.parse_args()
 
@@ -61,6 +109,14 @@ def main():
             args.employee_cost,
             args.ai_cost,
             args.implementation_cost,
+        )
+        projection = project_costs(
+            args.employees,
+            args.replaced,
+            args.employee_cost,
+            args.ai_cost,
+            args.implementation_cost,
+            years=args.years,
         )
     except ValueError as error:
         parser.error(str(error))
@@ -80,7 +136,14 @@ def main():
     print(f"  Baseline annual labor cost:  {baseline:>14,.2f} RON")
     print(f"  First-year scenario cost:    {scenario:>14,.2f} RON")
     print(f"  First-year savings:          {savings:>14,.2f} RON")
+
+    final_year = projection[-1]
+    print(f"\n{args.years}-Year Cumulative Totals")
+    print(f"  Cumulative baseline cost:    {final_year['cumul_baseline']:>14,.2f} RON")
+    print(f"  Cumulative scenario cost:    {final_year['cumul_scenario']:>14,.2f} RON")
+    print(f"  Cumulative savings:          {final_year['cumul_savings']:>14,.2f} RON")
     print()
+
 
 if __name__ == "__main__":
     main()
