@@ -35,20 +35,33 @@ Requires Python 3.10 or later. No extra packages are needed.
 Run with the default values:
 
 ```bash
-python3 src/main.py
+python3 src/prototype.py
 ```
 
 Change any inputs; omitted options keep their defaults:
 
 ```bash
-python3 src/main.py --employees 100 --replaced 20
+python3 src/prototype.py --employees 100 --replaced 20 --years 5
 ```
 
 Show all available options:
 
 ```bash
-python3 src/main.py --help
+python3 src/prototype.py --help
 ```
 
-With the default inputs, baseline cost is 3,000,000 RON, first-year scenario cost
-is 2,850,000 RON and savings are 150,000 RON.
+## Streamlit web interface
+
+Requires streamlit, pandas, plotly.
+
+```bash
+pip install streamlit pandas plotly
+```
+
+Open the dashboard:
+
+```bash
+streamlit run app.py
+```
+
+With the default inputs, baseline annual cost is 3,000,000 RON, first-year scenario cost is 2,850,000 RON, and first-year savings are 150,000 RON (with 250,000 RON/year in savings from Year 2 onward). Over 10 years, cumulative baseline cost is 30,000,000 RON, cumulative scenario cost is 27,600,000 RON, and total cumulative savings reach 2,400,000 RON.
