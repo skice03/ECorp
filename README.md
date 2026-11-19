@@ -28,7 +28,7 @@ mean lower costs; negative savings mean higher costs.
 All costs are in RON. The inputs are hypothetical, and company output and revenue
 are assumed unchanged. This is an initial cost comparison, not the final simulation.
 
-## Run
+### Run the prototype
 
 Requires Python 3.10 or later. No extra packages are needed.
 
@@ -49,6 +49,26 @@ Show all available options:
 ```bash
 python3 src/prototype.py --help
 ```
+
+## Week 2
+
+The Week 2 script uses the prototype's cost model, loads JSON parameters, and
+exports annual and cumulative results to CSV. Set the projection horizon to
+1–10 years in the JSON file or use `--years` to override it.
+
+Run the five-year example from the repository root.
+
+```bash
+python3 src/week2.py --parameters config/example_parameters.json --years 5 --output results/week2.csv
+```
+
+Run the tests for input validation, CSV output, and the one-time setup cost.
+
+```bash
+python3 -m unittest discover -s tests
+```
+
+The example uses hypothetical costs in RON. [Sample CSV](results/week2.csv) · [Week 2 guide](docs/week2.md)
 
 ## Streamlit web interface
 
