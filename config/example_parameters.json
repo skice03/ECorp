@@ -1,0 +1,8 @@
+{
+  "employees": 100,
+  "replaced": 10,
+  "annual_employee_cost": 30000,
+  "annual_ai_cost": 50000,
+  "implementation_cost": 100000,
+  "years": 10
+}
