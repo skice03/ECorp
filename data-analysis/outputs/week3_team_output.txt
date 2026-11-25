@@ -1,0 +1,47 @@
+== FILE INTEGRITY ==
+groups: 22 | employment sum: 161,931,500 | dataset_employment: 161,931,500
+blank-by-design keys: ['implementation_cost', 'realized_displacement', 'demand_response']
+scenarios:
+ id                        label  deployment_share  time_saved exposure_measure
+S0        No deployment control               0.0        0.25       human_beta
+S1    Low / direct LLM exposure               0.1        0.12      human_alpha
+S2  Moderate / central exposure               0.3        0.25       human_beta
+S3 High / full tooling exposure               0.6        0.40      human_gamma
+
+== CHECK 1: employment coverage ==
+team total 161.93M vs BLS total 2022 164.48M -> 98.4% coverage
+
+== CHECK 2: labor cost ==
+team emp-weighted labor_cost_proxy: $80,815/yr (2022 wages x 1.43)
+observed: OEWS May 2025 mean wage x 2080 / 0.70 = $99,662; ECEC Jun 2026 total comp x 2080 = $97,531
+team vs OEWS-2025 loaded: -18.9%; vs ECEC: -17.1%
+wage growth OEWS mean 2021->2025: +19.7%
+benefit loading observed range: 1/0.7 = 1.43 to 1/0.685 = 1.46
+jobs with no wage (excluded from labor cost): 508.7k in 16 occupations
+
+== CHECK 3: scenarios -> freed capacity ==
+id  deploy  time_saved     measure  exp_w  share_labor_time  job_equiv_M  value_bn  x_observed_ai_cuts
+S0     0.0        0.25  human_beta 0.3082            0.0000       0.0000    0.0000              0.0000
+S1     0.1        0.12 human_alpha 0.1525            0.0018       0.2963   25.2252              1.5332
+S2     0.3        0.25  human_beta 0.3082            0.0231       3.7429  336.4003             19.3706
+S3     0.6        0.40 human_gamma 0.4639            0.1113      18.0295 1648.4579             93.3078
+S3 / S1 freed capacity ratio: 61x
+
+== CHECK 4: deployment_share vs observed adoption bounds ==
+S0 deployment 0%: within (32% emp at AI-using firms; 41% emp at firms where workers use AI in tasks)
+S1 deployment 10%: within (32% emp at AI-using firms; 41% emp at firms where workers use AI in tasks)
+S2 deployment 30%: within (32% emp at AI-using firms; 41% emp at firms where workers use AI in tasks)
+S3 deployment 60%: above every observed bound (32% emp at AI-using firms; 41% emp at firms where workers use AI in tasks)
+
+== CHECK 5: time_saved vs trials ==
+team 0.25 [0.12, 0.4] vs trials 0.123-0.40
+
+== CHECK 6: where exposure says capacity is vs observed AI use ==
+Computer & math (15) share of S2 freed capacity: 5.8% vs 35% of Claude.ai conversations
+Office & admin (43) share: 20.3%; Sales (41): 12.8%
+
+== CHECK 7: one-at-a-time sensitivity around S2 (freed job-equivalents, M) ==
+S2 base: 3.74M
+  deployment_share: 1.25M to 7.49M (x6.0)
+  time_saved: 1.80M to 5.99M (x3.3)
+  exposure measure: 1.85M to 5.63M (x3.0)

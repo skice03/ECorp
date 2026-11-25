@@ -1,0 +1,102 @@
+== SHAPE ==
+(923, 8)
+
+== COLUMNS / DTYPES / NULLS / UNIQUE ==
+                      dtype  non_null  nulls  unique
+O*NET-SOC Code          str       923      0     923
+Title                   str       923      0     923
+dv_rating_alpha     float64       923      0     284
+dv_rating_beta      float64       923      0     539
+dv_rating_gamma     float64       923      0     428
+human_rating_alpha  float64       923      0     284
+human_rating_beta   float64       923      0     535
+human_rating_gamma  float64       923      0     465
+
+== DESCRIPTIVE STATS (scores) ==
+       dv_rating_alpha  dv_rating_beta  dv_rating_gamma  human_rating_alpha  human_rating_beta  human_rating_gamma
+count          923.000         923.000          923.000             923.000            923.000             923.000
+mean             0.142           0.345            0.548               0.144              0.303               0.461
+std              0.166           0.221            0.345               0.145              0.207               0.297
+min              0.000           0.000            0.000               0.000              0.000               0.000
+25%              0.041           0.145            0.200               0.000              0.109               0.185
+50%              0.097           0.361            0.600               0.115              0.306               0.458
+75%              0.182           0.500            0.875               0.235              0.472               0.727
+max              1.000           1.000            1.000               0.800              0.844               1.000
+
+== RANGE CHECK (all scores should be in [0,1]) ==
+dv_rating_alpha       0
+dv_rating_beta        0
+dv_rating_gamma       0
+human_rating_alpha    0
+human_rating_beta     0
+human_rating_gamma    0
+
+== IDENTITY CHECK: beta == (alpha + gamma)/2 ? ==
+dv_rating max abs diff: 1.1102230246251565e-16
+human_rating max abs diff: 1.1102230246251565e-16
+
+== ORDERING CHECK: alpha <= beta <= gamma ==
+dv_rating 100.0% of rows ordered
+human_rating 100.0% of rows ordered
+
+== KEY CHECKS ==
+duplicate O*NET codes: 0
+code format OK (NN-NNNN.NN): 1.0
+distinct 6-digit SOC codes: 798
+O*NET rows that are sub-specialties (suffix != .00): 149
+
+== ROWS PER SOC MAJOR GROUP ==
+major_group
+11     56
+13     48
+15     36
+17     56
+19     60
+21     14
+23      7
+25     62
+27     40
+29     89
+31     19
+33     26
+35     16
+37      8
+39     31
+41     22
+43     51
+45     12
+47     61
+49     50
+51    107
+53     52
+
+== GPT-4 vs HUMAN agreement (Pearson r) ==
+alpha 0.435
+beta 0.876
+gamma 0.913
+
+== TOP / BOTTOM 5 by human_rating_beta ==
+O*NET-SOC Code                        Title  human_rating_beta  dv_rating_beta
+    19-3022.00           Survey Researchers           0.843750        0.625000
+    19-1011.00            Animal Scientists           0.843750        0.531250
+    27-3091.00 Interpreters and Translators           0.840000        0.880000
+    27-3043.00          Writers and Authors           0.807692        0.865385
+    43-4011.00             Brokerage Clerks           0.800000        0.766667
+O*NET-SOC Code                                          Title  human_rating_beta  dv_rating_beta
+    53-7073.00                               Wellhead Pumpers                0.0        0.000000
+    53-7061.00             Cleaners of Vehicles and Equipment                0.0        0.083333
+    51-9191.00 Adhesive Bonding Machine Operators and Tenders                0.0        0.064516
+    29-2012.01                          Histology Technicians                0.0        0.125000
+    51-9031.00                     Cutters and Trimmers, Hand                0.0        0.000000
+occupations with human_rating_beta == 0: 58
+occupations with human_rating_gamma == 1: 15
+
+== JOIN TEST WITH BLS OEWS (6-digit SOC) ==
+OEWS columns: ['AREA', 'AREA_TITLE', 'AREA_TYPE', 'PRIM_STATE', 'NAICS', 'NAICS_TITLE', 'I_GROUP', 'OWN_CODE', 'OCC_CODE', 'OCC_TITLE', 'O_GROUP', 'TOT_EMP'] ...
+OEWS detailed occupations: 831
+6-digit SOC codes matched to OEWS: 772 of 798
+unmatched examples: ['13-1021', '13-1022', '13-1023', '13-2022', '13-2023', '21-1011', '21-1014', '25-2055', '25-2056', '25-9042']
+matched rows with suppressed wage (A_MEAN NaN): 5
+employment covered by matched occupations: 130630770
+employment-weighted mean human_rating_beta: 0.317
+corr(wage, human_rating_beta): 0.309

@@ -1,0 +1,18 @@
+{
+ "base": {
+  "freed_share": 0.02311409019550425,
+  "freed_jobs_M": 3.742899296493296,
+  "freed_value_bn": 336.4003105413815,
+  "redeployed_jobs_M": 1.871449648246648,
+  "spare_jobs_M": 1.871449648246648,
+  "displaced_per_yr_M": 0.8096575,
+  "displaced_cum_M": 1.871449648246648,
+  "displaced_y1_M": 0.8096575,
+  "impl_bn_yr": 29.7306234,
+  "training_bn_total": 1.9650221306589803,
+  "labor_saving_y5_bn": 168.20015527069074,
+  "net_y1_bn": 42.18876937470024,
+  "net_y5_bn": 138.46953187069073,
+  "net_cum_bn": 572.2909261305139
+ }
+}

@@ -1,0 +1,31 @@
+== WHAT CHANGED VS ROUND 1 ==
+added keys: ['integration_multiplier'] | changed values: ['demand_response', 'implementation_cost', 'realized_displacement']
+group rows changed: 0
+  still: us_firm_adoption_context class=Observed status=context_only_reported_not_reverified
+  still: benefit_loading class=Estimate status=transferred_estimate
+scenario columns: ['id', 'label', 'deployment_share', 'time_saved', 'exposure_measure', 'license_annual_proxy', 'integration_multiplier', 'implementation_cost', 'realized_displacement', 'demand_response', 'training_proxy', 'assumption_class', 'financial_settings_use']
+
+== CHECK A: implementation cost = license x multiplier ==
+max |license*multiplier - implementation_cost|: 0
+license column within observed band (252, 360) for S1-S3: True
+training within ATD range (846, 1254) for S1-S3: True
+
+== CHECK B: displacement vs observed ==
+id  displacement  displaced_per_yr_M  x_observed  freed_M  demand_response  slack_M  years_until_displaced_exceeds_slack  ai_users_M  impl_cost_bn  freed_value_bn  value_per_user  impl_cost_per_user  value_to_cost  training_bn_if_displaced
+S0         0.000               0.000       0.000    0.000              0.0    0.000                                  NaN       0.000         0.000           0.000             NaN                   0            NaN                     0.000
+S1         0.001               0.162       1.112    0.296              1.0    0.000                                0.000      16.193         4.081          25.225        1557.770                 252          6.182                     0.137
+S2         0.005               0.810       5.558    3.743              0.5    1.871                                2.311      48.579        29.731         336.400        6924.745                 612         11.315                     0.850
+S3         0.010               1.619      11.115   18.029              0.0   18.029                               11.134      97.159       104.932        1648.458       16966.617                1080         15.710                     2.031
+observed 2026 AI-cited cut pace: 145,681 = 0.090% of jobs/yr
+
+== CHECK C: demand response vs observed use pattern ==
+BTOS: of AI-using firms, 44% say AI supplemented existing work, 10% replaced a task, 11% added a new task
+scenario demand_response: {'S0': 0.0, 'S1': 1.0, 'S2': 0.5, 'S3': 0.0}
+
+== CHECK D: one-at-a-time sensitivity of S2 implementation cost and displacement ==
+  integration x1: cost $14.9bn vs freed value $336bn (22.6x)
+  integration x2: cost $29.7bn vs freed value $336bn (11.3x)
+  integration x3: cost $44.6bn vs freed value $336bn (7.5x)
+  displacement 0.1%: 0.16M jobs/yr; slack lasts 11.6 yrs
+  displacement 0.5%: 0.81M jobs/yr; slack lasts 2.3 yrs
+  displacement 1.0%: 1.62M jobs/yr; slack lasts 1.2 yrs
