@@ -6,6 +6,7 @@ import json
 import math
 import tempfile
 from pathlib import Path
+from zipfile import Path as ArchivePath
 
 # Use the same cost model in direct CLI runs and test imports.
 if __package__:
@@ -33,7 +34,7 @@ RESULT_COLUMNS = (
 )
 
 
-def load_parameters(path: Path) -> dict[str, int | float]:
+def load_parameters(path: Path | ArchivePath) -> dict[str, int | float]:
     """Read parameter overrides from a JSON object."""
     try:
         with path.open(encoding="utf-8") as parameter_file:
@@ -73,7 +74,7 @@ def run_projection(parameters: dict[str, int | float]) -> list[dict[str, int | f
     return projection
 
 
-def export_results(projection: list[dict[str, int | float]], path: Path) -> None:
+def export_results(projection: list[dict], path: Path, *, columns=RESULT_COLUMNS) -> None:
     """Save one row per projected year as a CSV file."""
     # Write the complete CSV beside its destination before replacing it.
     temporary_path = None
@@ -82,7 +83,7 @@ def export_results(projection: list[dict[str, int | float]], path: Path) -> None
             mode="w", encoding="utf-8", newline="", dir=path.parent, delete=False
         ) as output_file:
             temporary_path = Path(output_file.name)
-            writer = csv.DictWriter(output_file, fieldnames=RESULT_COLUMNS, lineterminator="\n")
+            writer = csv.DictWriter(output_file, fieldnames=columns, lineterminator="\n")
             writer.writeheader()
             writer.writerows(projection)
         temporary_path.replace(path)
