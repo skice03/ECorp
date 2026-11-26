@@ -1,0 +1,5 @@
+id,label,deployment_share,time_saved,exposure_measure,license_annual_proxy,integration_multiplier,implementation_cost,realized_displacement,demand_response,training_proxy,assumption_class,financial_settings_use
+S0,No deployment control,0,0.25,human_beta,0,1,0,0,0,0,Assumption,developer_handoff_only; not applied by saved-task-time calculator
+S1,Low / direct LLM exposure,0.1,0.12,human_alpha,252,1,252,0.001,1,846,Assumption,developer_handoff_only; not applied by saved-task-time calculator
+S2,Moderate / central exposure,0.3,0.25,human_beta,306,2,612,0.005,0.5,1050,Assumption,developer_handoff_only; not applied by saved-task-time calculator
+S3,High / full tooling exposure,0.6,0.4,human_gamma,360,3,1080,0.01,0,1254,Assumption,developer_handoff_only; not applied by saved-task-time calculator

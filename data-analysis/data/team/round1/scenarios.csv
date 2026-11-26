@@ -1,0 +1,5 @@
+id,label,deployment_share,time_saved,exposure_measure
+S0,No deployment control,0,0.25,human_beta
+S1,Low / direct LLM exposure,0.1,0.12,human_alpha
+S2,Moderate / central exposure,0.3,0.25,human_beta
+S3,High / full tooling exposure,0.6,0.4,human_gamma

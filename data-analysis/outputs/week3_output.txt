@@ -1,0 +1,29 @@
+== P1 LABOR COST ==
+baseline emp-weighted median of occupation medians: 45,728 vs BLS published 46,310 -> -1.3%
+baseline emp-weighted mean of medians: 56,471
+wage -> total employer cost multiplier: 1/0.7 = 1.429; loaded mean labor cost = 80,673
+OEWS mean wage 2021 58,260 -> May 2025 69,763 (hourly x 2080): +19.7%
+
+== P2 DISPLACEMENT ==
+baseline if exposure used as displacement: beta 0.308 -> 49.9M job-equivalents
+observed AI-cited announced cuts since 2023 through Oct 2026: 193,226 = 0.119% of 2022 jobs
+2026 pace annualised: 145,681 = 0.090% of jobs per year
+gap: exposure-implied / observed cumulative = 258x
+BLS EP 2022-32 Table 1.12: 428 occupations with a stated factor, 19 cite AI/ML
+  those AI-cited occupations in analysis table: 19, emp-weighted beta 0.536, projected change +1.5%
+
+== P4 PRODUCTIVITY ==
+baseline exposure definition: exposed tasks take >=50% less time
+labor time saved economy-wide if beta x 50%: 15.4%
+  Customer support (Brynjolfsson, Li & Raymond): time reduction 12.3% -> economy-wide 3.8%
+  Consultants inside frontier (Dell'Acqua et al.): time reduction 25.1% -> economy-wide 7.7%
+  Professional writing (Noy & Zhang): time reduction 40.0% -> economy-wide 12.3%
+observed range 12.3%-40.0% -> economy-wide labor time saved 3.8%-12.3%
+
+== P5 IMPLEMENTATION COST (license only) ==
+  $21/user/month = $252/yr = 0.31% of loaded labor cost per worker
+  $30/user/month = $360/yr = 0.45% of loaded labor cost per worker
+
+== P6 RETRAINING (proxy) ==
+  $846 = 1.05% of loaded labor cost per worker
+  $1254 = 1.55% of loaded labor cost per worker

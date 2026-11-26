@@ -1,0 +1,41 @@
+== 1. SCENARIO RUNS (as given, displacement capped at spare capacity) ==
+id   cap  freed_share  freed_jobs_M  freed_value_bn  redeployed_jobs_M  spare_jobs_M  displaced_per_yr_M  displaced_cum_M  impl_bn_yr  training_bn_total  labor_saving_y5_bn  net_y1_bn  net_y5_bn  net_cum_bn
+S0  True        0.000         0.000           0.000              0.000         0.000               0.000            0.000       0.000              0.000               0.000      0.000      0.000       0.000
+S0 False        0.000         0.000           0.000              0.000         0.000               0.000            0.000       0.000              0.000               0.000      0.000      0.000       0.000
+S1  True        0.002         0.296          25.225              0.296         0.000               0.162            0.000       4.081              0.000               0.000     -4.081     -4.081     -20.403
+S1 False        0.002         0.296          25.225              0.296         0.000               0.162            0.810       4.081              0.685              68.940      9.570     64.723     185.733
+S2  True        0.023         3.743         336.400              1.871         1.871               0.810            1.871      29.731              1.965             168.200     42.189    138.470     572.291
+S2 False        0.023         3.743         336.400              1.871         1.871               0.810            4.048      29.731              4.251             363.848     42.189    333.267     938.639
+S3  True        0.111        18.029        1648.458              0.000        18.029               1.619            8.097     104.932             10.153             740.279     41.094    633.317    1686.027
+S3 False        0.111        18.029        1648.458              0.000        18.029               1.619            8.097     104.932             10.153             740.279     41.094    633.317    1686.027
+
+== 2. S2 BY GROUP (capped) ==
+                          group   freed_jobs  displaced_cum  displaced_pct_of_group
+scope                                                                              
+43       Office & admin support  759736.9524    379868.4762                  0.0195
+41                        Sales  480167.2808    240083.6404                  0.0167
+13         Business & financial  414056.4050    207028.2025                  0.0195
+11                   Management  392873.3129    196436.6564                  0.0157
+25          Education & library  223474.2812    111737.1406                  0.0127
+15              Computer & math  218268.4683    109134.2341                  0.0207
+29     Healthcare practitioners  214058.2980    107029.1490                  0.0113
+53      Transportation & moving  153850.7453     76925.3727                  0.0054
+
+== 3. ONE-AT-A-TIME SENSITIVITY AROUND S2 (capped) ==
+S2 base: freed 3.74M, displaced 5y 1.87M, net y5 $138.5bn
+                   parameter low_setting high_setting  freed_lo  freed_hi  net5_lo  net5_hi  disp5_lo  disp5_hi  net5_swing
+             demand_response         1.0          0.0      3.74      3.74   -29.73   306.14      0.00      3.74      335.87
+            deployment_share         0.1          0.6      1.25      7.49    46.16   276.41      0.62      3.74      230.25
+                  time_saved        0.12          0.4      1.80      5.99    51.01   239.39      0.90      2.99      188.38
+            exposure measure human_alpha  human_gamma      1.85      5.63    49.10   227.84      0.93      2.82      178.74
+       realized_displacement       0.001         0.01      3.74      3.74    42.87   138.47      0.81      1.87       95.60
+wages 2022 -> uprated +19.7%         1.0        1.197      3.74      3.74   138.47   171.60      1.87      1.87       33.14
+      integration multiplier         306          918      3.74      3.74   153.33   123.60      1.87      1.87       29.73
+             benefit_loading        1.43         1.46      3.74      3.74   138.47   142.00      1.87      1.87        3.53
+
+== 4. EXTERNAL BENCHMARKS (not validation) ==
+S0: freed time 0.00% of hours vs observed 2.16% (0.00x); displaced/yr 0 vs observed 145,681 (0.0x); deployment 0% vs genAI work users 39.2%
+S1: freed time 0.18% of hours vs observed 2.16% (0.08x); displaced/yr 161,932 vs observed 145,681 (1.1x); deployment 10% vs genAI work users 39.2%
+S2: freed time 2.31% of hours vs observed 2.16% (1.07x); displaced/yr 809,658 vs observed 145,681 (5.6x); deployment 30% vs genAI work users 39.2%
+S3: freed time 11.13% of hours vs observed 2.16% (5.15x); displaced/yr 1,619,315 vs observed 145,681 (11.1x); deployment 60% vs genAI work users 39.2%
+deployment that reproduces observed 2.16% at S2 time_saved/beta: 0.280
