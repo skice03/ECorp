@@ -85,3 +85,21 @@ streamlit run src/app.py
 ```
 
 With the default inputs, baseline annual cost is 3,000,000 RON, first-year scenario cost is 2,850,000 RON, and first-year savings are 150,000 RON (with 250,000 RON/year in savings from Year 2 onward). Over 10 years, cumulative baseline cost is 30,000,000 RON, cumulative scenario cost is 27,600,000 RON, and total cumulative savings reach 2,400,000 RON.
+
+## Weeks 3 and 4 — reproduce the paper's scenarios
+
+From the repository root, run all four five-year scenarios with Python 3.10+.
+The command reads Enache’s 88 JSON inputs directly from the committed ZIP and
+writes one annual row per scenario to `results/scenarios.csv`.
+
+```bash
+python3 src/scenarios.py
+```
+
+To run the moderate scenario on its own and keep the four-scenario results:
+
+```bash
+python3 src/scenarios.py --scenario S2 --output results/s2.csv
+```
+
+[Simulation guide and technical description](docs/scenarios.md) · [Annual scenario results](results/scenarios.csv)
