@@ -1,7 +1,9 @@
+import io
+import json
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
-from prototype import project_costs
+from week2 import DEFAULT_PARAMETERS, RESULT_COLUMNS, run_projection
 
 st.set_page_config(page_title="AI workforce replacement cost comparison", layout="wide")
 st.title("EVIL CORP — Workforce Cost Comparison")
@@ -9,41 +11,73 @@ st.title("EVIL CORP — Workforce Cost Comparison")
 # inputs
 with st.sidebar:
     st.header("Inputs")
-    employees = st.number_input("Initial number of employees", min_value=0, value=100, step=1)
+    uploaded_json = st.file_uploader("Load parameters (.json)", type=["json"])
+
+    loaded_params = dict(DEFAULT_PARAMETERS)
+    if uploaded_json is not None:
+        try:
+            raw_data = json.load(uploaded_json)
+            if not isinstance(raw_data, dict):
+                raise ValueError("JSON file must contain an object.")
+            unknown = raw_data.keys() - DEFAULT_PARAMETERS.keys()
+            if unknown:
+                raise ValueError(f"Unknown parameters: {', '.join(sorted(unknown))}")
+            for key, val in raw_data.items():
+                if key in ("employees", "replaced", "years") and type(val) is not int:
+                    raise ValueError(f"Parameter '{key}' must be an integer.")
+                if key not in ("employees", "replaced", "years") and type(val) not in (int, float):
+                    raise ValueError(f"Parameter '{key}' must be a number.")
+            loaded_params.update(raw_data)
+        except (ValueError, json.JSONDecodeError) as err:
+            st.error(str(err))
+
+    employees = st.number_input(
+        "Initial number of employees", min_value=0, value=int(loaded_params["employees"]), step=1
+    )
     replaced = st.number_input(
         "Employees replaced",
         min_value=0,
         max_value=int(employees),
-        value=min(10, int(employees)),
+        value=min(int(loaded_params["replaced"]), int(employees)),
         step=1,
     )
     annual_employee_cost = st.number_input(
-        "Annual cost per employee (RON)", min_value=0.0, value=30000.0, step=1000.0
+        "Annual cost per employee (RON)",
+        min_value=0.0,
+        value=float(loaded_params["annual_employee_cost"]),
+        step=1000.0,
     )
     annual_ai_cost = st.number_input(
-        "Annual AI operating cost (RON)", min_value=0.0, value=50000.0, step=5000.0
+        "Annual AI operating cost (RON)",
+        min_value=0.0,
+        value=float(loaded_params["annual_ai_cost"]),
+        step=5000.0,
     )
     implementation_cost = st.number_input(
-        "One-time implementation cost (RON)", min_value=0.0, value=100000.0, step=10000.0
+        "One-time implementation cost (RON)",
+        min_value=0.0,
+        value=float(loaded_params["implementation_cost"]),
+        step=10000.0,
     )
-    years = st.slider("Years to project", min_value=1, max_value=10, value=10)
-    # overlay_style = st.radio("Chart overlay style", ["Overlaid Lines + Shaded Gap", "Overlaid Bars"])
+    years = st.slider("Years to project", min_value=1, max_value=10, value=int(loaded_params["years"]))
 
 # calculate projection
+parameters = {
+    "employees": int(employees),
+    "replaced": int(replaced),
+    "annual_employee_cost": float(annual_employee_cost),
+    "annual_ai_cost": float(annual_ai_cost),
+    "implementation_cost": float(implementation_cost),
+    "years": int(years),
+}
+
 try:
-    rows = project_costs(
-        employees=int(employees),
-        replaced=int(replaced),
-        annual_employee_cost=annual_employee_cost,
-        annual_ai_cost=annual_ai_cost,
-        implementation_cost=implementation_cost,
-        years=years,
-    )
+    rows = run_projection(parameters)
 except ValueError as err:
     st.error(str(err))
     st.stop()
 
-df = pd.DataFrame(rows)
+df = pd.DataFrame(rows, columns=RESULT_COLUMNS)
 first_year = df.iloc[0]
 final_year = df.iloc[-1]
 
@@ -80,46 +114,26 @@ def make_overlaid_chart(data, baseline_col, scenario_col, title, y_axis_title):
     fig = go.Figure()
     x_labels = [f"Year {y}" for y in data["year"]]
 
-    if 1==1:
-        fig.add_trace(
-            go.Scatter(
-                x=x_labels,
-                y=data[baseline_col],
-                name="Before replacement (baseline)",
-                mode="lines+markers",
-                line=dict(color="#EF553B", width=3),
-            )
+    fig.add_trace(
+        go.Scatter(
+            x=x_labels,
+            y=data[baseline_col],
+            name="Before replacement (baseline)",
+            mode="lines+markers",
+            line=dict(color="#EF553B", width=3),
         )
-        fig.add_trace(
-            go.Scatter(
-                x=x_labels,
-                y=data[scenario_col],
-                name="After replacement (scenario)",
-                mode="lines+markers",
-                line=dict(color="#00CC96", width=3),
-                fill="tonexty",
-                fillcolor="rgba(0, 204, 150, 0.18)",
-            )
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=x_labels,
+            y=data[scenario_col],
+            name="After replacement (scenario)",
+            mode="lines+markers",
+            line=dict(color="#00CC96", width=3),
+            fill="tonexty",
+            fillcolor="rgba(0, 204, 150, 0.18)",
         )
-    else:
-        fig.add_trace(
-            go.Bar(
-                x=x_labels,
-                y=data[baseline_col],
-                name="Before AI (Baseline)",
-                marker_color="rgba(239, 85, 59, 0.55)",
-            )
-        )
-        fig.add_trace(
-            go.Bar(
-                x=x_labels,
-                y=data[scenario_col],
-                name="After AI (Scenario)",
-                marker_color="rgba(0, 204, 150, 0.75)",
-                width=0.55,
-            )
-        )
-        fig.update_layout(barmode="overlay")
+    )
 
     fig.update_layout(
         title=title,
@@ -143,16 +157,16 @@ st.plotly_chart(
     use_container_width=True,
 )
 
-# st.plotly_chart(
-#     make_overlaid_chart(
-#         df,
-#         "cumul_baseline",
-#         "cumul_scenario",
-#         "Cumulative Cost: Before AI vs. After AI (Shaded Area = Cumulative Savings)",
-#         "Cumulative Cost (RON)",
-#     ),
-#     use_container_width=True,
-# )
+st.plotly_chart(
+    make_overlaid_chart(
+        df,
+        "cumul_baseline",
+        "cumul_scenario",
+        "Cumulative Cost: Before AI vs. After AI (Shaded Area = Cumulative Savings)",
+        "Cumulative Cost (RON)",
+    ),
+    use_container_width=True,
+)
 
 with st.expander("View Year-by-Year Table"):
     display_df = df.rename(
@@ -171,3 +185,12 @@ with st.expander("View Year-by-Year Table"):
         use_container_width=True,
         hide_index=True,
     )
+
+csv_buffer = io.StringIO()
+df.to_csv(csv_buffer, index=False, lineterminator="\n")
+st.download_button(
+    label="Download results (.csv)",
+    data=csv_buffer.getvalue(),
+    file_name="results.csv",
+    mime="text/csv",
+)
